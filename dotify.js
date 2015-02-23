@@ -4,8 +4,8 @@ var path = require("path");
 var exec = require('exec-sync');
 var _ = require("lodash");
 
-var HOME = process.env.HOME;
-var DOTFILES = HOME + "/.dotfiles/";
+var HOME = process.env.HOME + "/";
+var DOTFILES = HOME + ".dotfiles/";
 
 function parseRecipe(bundle, recipe) {
    var actions = [];
@@ -52,6 +52,13 @@ function loadConfig() {
 global.link = function(bundle, file) {
    var dest = HOME;
    var source = DOTFILES + bundle;
+
+   if (typeof(file) === 'object') {
+      if (file.dest) {
+         dest = dest + file.dest + "/";
+      }
+      file = file.files;
+   }
 
    var processFile = function(fileSource, fileDest, remove) {
       if (remove) {
