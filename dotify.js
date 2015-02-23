@@ -74,27 +74,6 @@ function loadConfig(hostname) {
    }
 }
 
-global.exec = function(bundle, cmd) {
-   return function(remove) {
-      if (!remove) {
-         var command = cmd;
-         if (typeof(cmd) === 'object') {
-            command = cmd.cmd;
-            if (cmd.cwd) {
-               command = "cd " + cmd.cwd + " && " + command;
-            }
-         }
-         executeAction(command, function() {
-            try {
-               exec(command);
-            } catch (err) {
-               console.log(err);
-            }
-         });
-      }
-   };
-}
-
 global.git = function(orig, repo) {
    var dest = HOME + "." + orig;
    return function(remove) {
