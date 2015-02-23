@@ -1,7 +1,7 @@
 {
-  "name": "dotify",
+  "name": "dotback",
   "version": "0.0.1",
-  "homepage": "https://github.com/dpecos/dotify",
+  "homepage": "https://github.com/dpecos/dotback",
   "author": "Daniel Pecos Martinez",
   "description": "Config files backup tool",
   "license": "MIT",
@@ -11,10 +11,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git@github.com:dpecos/dotify.git"
+    "url": "git@github.com:dpecos/dotback.git"
   },
   "bugs": {
-    "url": "https://github.com/dpecos/dotify/issues"
+    "url": "https://github.com/dpecos/dotback/issues"
   }, "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -25,6 +25,6 @@
   },
   "preferGlobal": "true",
   "bin": {
-     "dotify": "dotify.js"
+     "dotback": "dotback.js"
   }
 }
