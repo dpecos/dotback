@@ -10,12 +10,26 @@ var DOTFILES = HOME + ".dotfiles/";
 
 function parseRecipe(bundle, recipe) {
    var actions = [];
+   var stepsCache = {};
 
    for (var action in recipe) {
       if (action == "skip") {
          return [];
       }
-      var handler = global[action];
+      if (!stepsCache[action]) {
+         try {
+         var step = require("./steps/" + action + ".js"); 
+         stepsCache[action] = step({
+            executeAction: executeAction,
+            HOME: HOME,
+            DOTFILES: DOTFILES
+         });
+         } catch (err) {
+            console.log("ERROR: step '" + action + "' definition not found");
+         }
+      }
+
+      var handler = stepsCache[action] || global[action];
 
       var params = recipe[action];
       if (!Array.isArray(params)) {
@@ -57,55 +71,6 @@ function loadConfig(hostname) {
       return config;
    } else {
       return null;
-   }
-}
-
-global.link = function(bundle, file) {
-   var dest = HOME;
-   var source = DOTFILES + bundle;
-
-   if (typeof(file) === 'object') {
-      if (file.dest) {
-         dest = dest + file.dest + "/";
-      }
-      file = file.files;
-   }
-
-   var processFile = function(fileSource, fileDest, remove) {
-      if (remove) {
-         if (fs.existsSync(fileDest)) {
-            executeAction("rm " + fileDest, function() {
-               fs.unlinkSync(fileDest);
-            });
-         }
-      } else {
-         executeAction("link " + fileSource + " -> " + fileDest, function() {
-            fs.symlinkSync(fileSource, fileDest); 
-         });
-      }
-   };
-
-   if (file === null || file !== "*") {
-      return function(remove) {
-         var fileDest = dest + "." + bundle;
-         var fileSource = source;
-         if (file) {
-            fileSource = fileSource + "/" + file;
-            fileDest = dest + "." + file;
-         }
-
-         processFile(fileSource, fileDest, remove);
-      }
-   } else if (file === "*") {
-      return function(remove) {
-         var files = fs.readdirSync(source);
-         files.forEach(function(file) {
-            var fileSource = source + "/" + file;
-            var fileDest = dest + "." + file;
-
-            processFile(fileSource, fileDest, remove);
-         });
-      }
    }
 }
 
