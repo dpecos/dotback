@@ -29,7 +29,7 @@ function parseRecipe(bundle, recipe) {
          }
       }
 
-      var handler = stepsCache[action] || global[action];
+      var handler = stepsCache[action];
 
       var params = recipe[action];
       if (!Array.isArray(params)) {
@@ -72,28 +72,6 @@ function loadConfig(hostname) {
    } else {
       return null;
    }
-}
-
-global.git = function(orig, repo) {
-   var dest = HOME + "." + orig;
-   return function(remove) {
-      var command = null;
-      if (remove) {
-         if (fs.existsSync(dest)) {
-            command = "rm -r " + dest;
-
-         }
-      } else {
-         command = "git clone " + repo + " " + dest;
-      }
-      executeAction(command, function() {
-         try {
-            exec(command);
-         } catch (err) {
-            console.log(err);
-         }
-      });
-   };
 }
 
 var debugEnabled = false;
