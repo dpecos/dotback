@@ -63,12 +63,14 @@ global.link = function(bundle, file) {
    var processFile = function(fileSource, fileDest, remove) {
       if (remove) {
          if (fs.existsSync(fileDest)) {
-            console.log("rm " + fileDest);
-            fs.unlinkSync(fileDest);
+            executeAction("rm " + fileDest, function() {
+               fs.unlinkSync(fileDest);
+            });
          }
       } else {
-         console.log("link " + fileSource + " -> " + fileDest);
-         fs.symlinkSync(fileSource, fileDest); 
+         executeAction("link " + fileSource + " -> " + fileDest, function() {
+            fs.symlinkSync(fileSource, fileDest); 
+         });
       }
    };
 
@@ -106,12 +108,13 @@ global.exec = function(bundle, cmd) {
                command = "cd " + cmd.cwd + " && " + command;
             }
          }
-         console.log(command);
-         try {
-            exec(command);
-         } catch (err) {
-            console.log(err);
-         }
+         executeAction(command, function() {
+            try {
+               exec(command);
+            } catch (err) {
+               console.log(err);
+            }
+         });
       }
    };
 }
@@ -128,13 +131,30 @@ global.git = function(orig, repo) {
       } else {
          command = "git clone " + repo + " " + dest;
       }
-      console.log(command);
-      try {
-         exec(command);
-      } catch (err) {
-         console.log(err);
-      }
+      executeAction(command, function() {
+         try {
+            exec(command);
+         } catch (err) {
+            console.log(err);
+         }
+      });
    };
+}
+
+var debugEnabled = false;
+
+function executeAction(message, action) {
+   if (debugEnabled) {
+      console.log(message);
+   } else {
+      if (action) {
+         action();
+      }
+   }
+}
+
+function debug(enable) {
+   debugEnabled = enable;
 }
 
 function clean() {
@@ -178,8 +198,11 @@ if (process.argv[2] == "init") {
 } else if (process.argv[2] == "install") {
    var config = loadConfig();
 
+   if (process.argv[3] == "--debug") {
+     debug(true);
+   }
+
    clean();
-   console.log("----------");
    setup();
 } else {
    console.log("ERROR: Unknown option");
