@@ -4,8 +4,8 @@ var path = require("path");
 var exec = require('exec-sync');
 var _ = require("lodash");
 
-var HOME = "/home/dani/";
-var DOTFILES = HOME + ".dotfiles/";
+var HOME = process.env.HOME;
+var DOTFILES = HOME + "/.dotfiles/";
 
 function parseRecipe(bundle, recipe) {
    var actions = [];
@@ -31,7 +31,7 @@ function parseRecipe(bundle, recipe) {
 }
 
 function loadConfig() {
-   var jsonConfig = require("./config.json");
+   var jsonConfig = require(DOTFILES + "/config.json");
    var config = {};
 
    for (var bundle in jsonConfig) {
@@ -165,7 +165,6 @@ function init(repository) {
    }
 }
 
-console.log(process.argv);
 if (process.argv[2] == "init") {
    init(process.argv[3]);
 
