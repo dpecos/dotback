@@ -1,27 +1,30 @@
 {
   "name": "dotify",
   "version": "1.0.0",
+  "homepage": "https://github.com/dpecos/dotify",
+  "author": "Daniel Pecos Martínez",
   "description": "Config files backup tool",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/dpecos/dotify"
-  },
+  "license": "MIT",
   "keywords": [
     "backup",
     "config"
   ],
-  "author": "Daniel Pecos Martínez",
-  "license": "BSD",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dpecos/dotify"
+  },
   "bugs": {
     "url": "https://github.com/dpecos/dotify/issues"
+  }, "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "homepage": "https://github.com/dpecos/dotify",
   "dependencies": {
     "exec-sync": "^0.1.6",
     "lodash": "^3.3.0"
+  },
+  "preferGlobal": "true",
+  "bin": {
+     "dotify": "dotify.js"
   }
 }
