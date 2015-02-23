@@ -1,8 +1,8 @@
 {
   "name": "dotify",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "homepage": "https://github.com/dpecos/dotify",
-  "author": "Daniel Pecos Martínez",
+  "author": "Daniel Pecos Martinez",
   "description": "Config files backup tool",
   "license": "MIT",
   "keywords": [
@@ -11,7 +11,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/dpecos/dotify"
+    "url": "git@github.com:dpecos/dotify.git"
   },
   "bugs": {
     "url": "https://github.com/dpecos/dotify/issues"
