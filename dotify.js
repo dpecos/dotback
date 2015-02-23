@@ -3,6 +3,7 @@ var fs = require("fs");
 var path = require("path");
 var exec = require('exec-sync');
 var _ = require("lodash");
+var os = require("os");
 
 var HOME = process.env.HOME + "/";
 var DOTFILES = HOME + ".dotfiles/";
@@ -30,23 +31,33 @@ function parseRecipe(bundle, recipe) {
    return actions;
 }
 
-function loadConfig() {
-   var jsonConfig = require(DOTFILES + "/config.json");
-   var config = {};
-
-   for (var bundle in jsonConfig) {
-      var recipe = jsonConfig[bundle];
-
-      if (Array.isArray(recipe)) {
-         config[bundle] = _(recipe).map(function(step) {
-            return parseRecipe(bundle, step);
-         }).flatten().value();
-      } else {
-         config[bundle] = parseRecipe(bundle, recipe); 
-      }
+function loadConfig(hostname) {
+   var jsonConfig = null;
+   if (hostname) {
+      jsonConfig = DOTFILES + "config." + hostname + ".json";
+   } else {
+      jsonConfig = DOTFILES + "config.json";
    }
 
-   return config;
+   if (fs.existsSync(jsonConfig)) {
+      jsonConfig = require(jsonConfig);
+      var config = {};
+
+      for (var bundle in jsonConfig) {
+         var recipe = jsonConfig[bundle];
+
+         if (Array.isArray(recipe)) {
+            config[bundle] = _(recipe).map(function(step) {
+               return parseRecipe(bundle, step);
+            }).flatten().value();
+         } else {
+            config[bundle] = parseRecipe(bundle, recipe); 
+         }
+      }
+      return config;
+   } else {
+      return null;
+   }
 }
 
 global.link = function(bundle, file) {
@@ -196,11 +207,15 @@ if (process.argv[2] == "init") {
    init(process.argv[3]);
 
 } else if (process.argv[2] == "install") {
-   var config = loadConfig();
 
    if (process.argv[3] == "--debug") {
      debug(true);
    }
+
+   var config = loadConfig();
+   var hostConfig = loadConfig(os.hostname());
+
+   config = _.extend(config, hostConfig);
 
    clean();
    setup();
