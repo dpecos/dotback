@@ -12,7 +12,7 @@ var should = chai.should();
 describe("git step", function() {
    var git = null;
    var action = null;
-   var test_dir = "/tmp/.test-git"
+   var test_dir = "/tmp/.test-git";
 
    before(function() {
       var step = require("../steps/git.js");

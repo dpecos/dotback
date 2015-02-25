@@ -5,7 +5,7 @@ module.exports = function(ctx) {
       var dest = ctx.HOME;
       var source = ctx.DOTFILES + bundle;
 
-      if (typeof(file) === 'object') {
+      if (file !== null && typeof(file) === 'object') {
          if (file.dest) {
             dest = dest + file.dest + "/";
          }
