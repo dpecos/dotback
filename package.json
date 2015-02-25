@@ -22,7 +22,8 @@
   },
   "dependencies": {
     "exec-sync": "^0.1.6",
-    "lodash": "^3.3.0"
+    "lodash": "^3.3.0",
+    "winston": "^0.9.0"
   },
   "preferGlobal": "true",
   "bin": {

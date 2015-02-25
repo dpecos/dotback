@@ -4,6 +4,9 @@ var path = require("path");
 var exec = require('exec-sync');
 var _ = require("lodash");
 var os = require("os");
+var log = require("winston");
+log.cli()
+log.level = 'debug';
 
 var HOME = process.env.HOME + "/";
 var DOTFILES = HOME + ".dotfiles/";
@@ -25,7 +28,7 @@ function parseRecipe(bundle, recipe) {
             DOTFILES: DOTFILES
          });
          } catch (err) {
-            console.log("ERROR: step '" + action + "' definition not found");
+            log.error("Step '" + action + "' definition not found");
          }
       }
 
@@ -78,7 +81,7 @@ var debugEnabled = false;
 
 function executeAction(message, action) {
    if (debugEnabled) {
-      console.log(message);
+      log.debug(message);
    } else {
       if (action) {
          action();
@@ -131,6 +134,7 @@ if (process.argv[2] == "init") {
 } else if (process.argv[2] == "install") {
 
    if (process.argv[3] == "--debug") {
+     log.info("Debug mode enabled");
      debug(true);
    }
 
@@ -139,8 +143,10 @@ if (process.argv[2] == "init") {
 
    config = _.extend(config, hostConfig);
 
+   log.info("Cleaning files...");
    clean();
+   log.info("Setting up environment...");
    setup();
 } else {
-   console.log("ERROR: Unknown option");
+   log.error("Unknown option");
 }
