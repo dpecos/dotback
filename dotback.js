@@ -128,12 +128,23 @@ function init(repository) {
    }
 }
 
-if (process.argv[2] == "init") {
-   init(process.argv[3]);
+var argv = require("optimist").
+   usage("Usage: $0 --action [action] [--debug]").
+   demand("action").string("action").describe("action", "Possible values: init, install").
+   argv;
 
-} else if (process.argv[2] == "install") {
 
-   if (process.argv[3] == "--debug") {
+if (argv.action == "init") {
+
+   if (argv._.length != 1) {
+      log.error("init requires a repository URL as single parameter");
+   } else {
+      init(process.argv[3]);
+   }
+
+} else if (argv.action == "install") {
+
+   if (argv.debug) {
      log.info("Debug mode enabled");
      debug(true);
    }
@@ -147,6 +158,7 @@ if (process.argv[2] == "init") {
    clean();
    log.info("Setting up environment...");
    setup();
+
 } else {
-   log.error("Unknown option");
+   log.error("Unknown action " + argv.action);
 }
