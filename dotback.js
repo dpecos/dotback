@@ -26,7 +26,8 @@ function parseRecipe(bundle, recipe) {
          stepsCache[action] = step({
             executeAction: executeAction,
             HOME: HOME,
-            DOTFILES: DOTFILES
+            DOTFILES: DOTFILES,
+            log: log
          });
          } catch (err) {
             log.error("Step '" + action + "' definition not found");
@@ -81,9 +82,8 @@ function loadConfig(hostname) {
 var debugEnabled = false;
 
 function executeAction(message, action) {
-   if (debugEnabled) {
-      log.debug(message);
-   } else {
+   log.debug(message);
+   if (!debugEnabled) {
       if (action) {
          action();
       }

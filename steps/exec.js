@@ -12,13 +12,15 @@ module.exports = function(ctx) {
                   command = "cd " + cmd.cwd + " && " + command;
                }
             }
-            ctx.executeAction(command, function() {
-               try {
+            if (command) {
+              ctx.executeAction(command, function() {
+                try {
                   exec(command);
-               } catch (err) {
-                  console.log(err);
-               }
-            });
+                } catch (err) {
+                  ctx.log.error("EXEC: error executing '" + command + "': " + err);
+                }
+              });
+            }
          }
       };
    }

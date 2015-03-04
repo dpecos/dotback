@@ -1,6 +1,6 @@
 var fs = require("fs");
 var child_process = require("child_process");
-var exec = child_process.existsSync;
+var exec = child_process.execSync;
 
 module.exports = function(ctx) {
    return function(orig, repo) {
@@ -14,13 +14,16 @@ module.exports = function(ctx) {
          } else {
             command = "git clone " + repo + " " + dest;
          }
-         ctx.executeAction(command, function() {
-            try {
-               exec(command);
-            } catch (err) {
-               console.log(err);
-            }
-         });
+
+         if (command) {
+           ctx.executeAction(command, function() {
+	     try {
+	       exec(command);
+	     } catch (err) {
+	       ctx.log.error("GIT: error executing '" + command + "': " + err);
+	     }
+	   });
+	 }
       };
    }
 };
