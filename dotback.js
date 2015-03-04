@@ -1,7 +1,8 @@
 #!/usr/bin/env node 
 var fs = require("fs");
 var path = require("path");
-var exec = require('exec-sync');
+var child_process = require("child_process");
+var exec = child_process.execSync;
 var _ = require("lodash");
 var os = require("os");
 var log = require("winston");

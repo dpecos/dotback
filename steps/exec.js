@@ -1,4 +1,5 @@
-var exec = require("exec-sync");
+var child_process = require("child_process");
+var exec = child_process.execSync;
 
 module.exports = function(ctx) {
    return function(bundle, cmd) {

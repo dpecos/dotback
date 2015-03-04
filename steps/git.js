@@ -1,5 +1,6 @@
 var fs = require("fs");
-var exec = require("exec-sync");
+var child_process = require("child_process");
+var exec = child_process.existsSync;
 
 module.exports = function(ctx) {
    return function(orig, repo) {
