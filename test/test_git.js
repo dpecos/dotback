@@ -54,7 +54,7 @@ describe("git step", function() {
       var step = git("dont-exists-directory", "repository_url");
       step(true);
 
-      (action.command === null).should.be.true;
+      (action === null).should.be.true;
    });
 
 });

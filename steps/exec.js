@@ -13,13 +13,13 @@ module.exports = function(ctx) {
                }
             }
             if (command) {
-              ctx.executeAction(command, function() {
-                try {
-                  exec(command);
-                } catch (err) {
-                  ctx.log.error("EXEC: error executing '" + command + "': " + err);
-                }
-              });
+               ctx.executeAction(command, function() {
+                  try {
+                     exec(command);
+                  } catch (err) {
+                     ctx.log.error("EXEC: error executing '" + command + "': " + err);
+                  }
+               });
             }
          }
       };
