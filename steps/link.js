@@ -26,7 +26,7 @@ module.exports = function(ctx) {
          }
       };
 
-      if (file === null || file !== "*") {
+      if (file === null || file.indexOf("*") === -1) {
          return function(remove) {
             var fileDest = dest + "." + bundle;
             var fileSource = source;
@@ -37,14 +37,23 @@ module.exports = function(ctx) {
 
             processFile(fileSource, fileDest, remove);
          }
-      } else if (file === "*") {
+      } else {
          return function(remove) {
             var files = fs.readdirSync(source);
-            files.forEach(function(file) {
-               var fileSource = source + "/" + file;
-               var fileDest = dest + "." + file;
+            files.forEach(function(fileName) {
+               var matches = true;
 
-               processFile(fileSource, fileDest, remove);
+               if (file.indexOf("*") !== -1 && file !== "*") {
+                  matches = fileName.match(file);
+                  matches = ( matches != null && matches[0] !== "");
+               }
+
+               if (matches) {
+                  var fileSource = source + "/" + fileName;
+                  var fileDest = dest + "." + fileName;
+
+                  processFile(fileSource, fileDest, remove);
+               }
             });
          }
       }

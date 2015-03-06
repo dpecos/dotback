@@ -61,11 +61,25 @@ describe("link step", function() {
       action.command.should.equal("link " + dotfiles + "test/file -> " + home + ".file");
    });
 
-   it("should link directory content", function() {
+   it("should link all directory content", function() {
       var step = link("test", "*");
       step();
 
       action.command.should.equal("link " + dotfiles + "test/file -> " + home + ".file");
+   });
+
+   it("should link matching directory content", function() {
+      var step = link("test", "f*");
+      step();
+
+      action.command.should.equal("link " + dotfiles + "test/file -> " + home + ".file");
+   });
+    
+   it("should not link non-matching directory content", function() {
+      var step = link("test", "x*");
+      step();
+
+      (action === null).should.be.true;
    });
 
    it("should remove previous links if it exist", function() {
