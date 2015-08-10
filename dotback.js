@@ -140,7 +140,7 @@ if (argv.action == "init") {
    if (argv._.length != 1) {
       log.error("init requires a repository URL as single parameter");
    } else {
-      init(process.argv[3]);
+      init(process.argv[4]);
    }
 
 } else if (argv.action == "install") {
