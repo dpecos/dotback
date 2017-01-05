@@ -21,6 +21,8 @@ func ReadConfig() ([]models.Recipe, error) {
 		return nil, fmt.Errorf("Could not parse config.json file: %s", err)
 	}
 
+	// fmt.Printf("%+v", config)
+
 	return config, nil
 }
 
