@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/dpecos/godot/models"
+	"github.com/dpecos/dotback/models"
 )
 
 func ReadConfig() ([]models.Recipe, error) {
@@ -33,7 +33,7 @@ func ExecRecipes(config []models.Recipe) {
 }
 
 func main() {
-	fmt.Printf("godot\n-----\n")
+	fmt.Printf("dotback\n-----\n")
 
 	config, err := ReadConfig()
 	if err != nil {

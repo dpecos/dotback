@@ -1,7 +1,7 @@
 package steps
 
 import "fmt"
-import "github.com/dpecos/godot/utils"
+import "github.com/dpecos/dotback/utils"
 
 // Executes a shell command
 func Cmd(recipe string, num int, command string) error {

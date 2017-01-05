@@ -6,7 +6,7 @@ import (
 	"path"
 	"path/filepath"
 
-	"github.com/dpecos/godot/utils"
+	"github.com/dpecos/dotback/utils"
 )
 
 func linkUndo(recipe string, num int, path string) {

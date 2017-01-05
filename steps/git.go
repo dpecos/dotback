@@ -5,7 +5,7 @@ import (
 
 	"path"
 
-	"github.com/dpecos/godot/utils"
+	"github.com/dpecos/dotback/utils"
 )
 
 // Clones a git repository
