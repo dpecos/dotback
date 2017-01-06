@@ -5,12 +5,14 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path"
 
 	"github.com/dpecos/dotback/models"
+	"github.com/dpecos/dotback/utils"
 )
 
 func ReadConfig() ([]models.Recipe, error) {
-	file, err := ioutil.ReadFile("config.json")
+	file, err := ioutil.ReadFile(path.Join(utils.HomeDir(), ".dotfiles", "config.json"))
 	if err != nil {
 		return nil, fmt.Errorf("Could not read config.json file: %s", err)
 	}

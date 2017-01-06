@@ -23,17 +23,17 @@ func Link(recipe string, num int, pattern string) error {
 	var err error
 	if _, err = os.Stat(from); err == nil {
 		if pattern == "*" {
-			err = filepath.Walk(from, func(path string, file os.FileInfo, err error) error {
+			err = filepath.Walk(from, func(filePath string, file os.FileInfo, err error) error {
 				if !file.IsDir() {
-					to := fmt.Sprintf("/tmp/home/.%s", file.Name())
+					to := path.Join(utils.HomeDir(), fmt.Sprintf(".%s", file.Name()))
 					linkUndo(recipe, num, to)
-					fmt.Printf(" · [#%d link] Linking %s -> %s\n", num, path, to)
-					return os.Symlink(path, to)
+					fmt.Printf(" · [#%d link] Linking %s -> %s\n", num, filePath, to)
+					return os.Symlink(filePath, to)
 				}
 				return nil
 			})
 		} else if pattern == "." {
-			to := fmt.Sprintf("/tmp/home/.%s", recipe)
+			to := path.Join(utils.HomeDir(), fmt.Sprintf(".%s", recipe))
 			linkUndo(recipe, num, to)
 			fmt.Printf(" · [#%d link] Linking %s -> %s\n", num, from, to)
 			err = os.Symlink(from, to)
