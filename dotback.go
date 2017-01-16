@@ -7,25 +7,23 @@ import (
 	"os"
 	"path"
 
+	"gopkg.in/alecthomas/kingpin.v2"
+
 	"github.com/dpecos/dotback/models"
-	"github.com/dpecos/dotback/utils"
+	. "github.com/dpecos/dotback/utils"
 )
 
-func ReadConfig() ([]models.Recipe, error) {
-	file, err := ioutil.ReadFile(path.Join(utils.HomeDir(), ".dotfiles", "config.json"))
-	if err != nil {
-		return nil, fmt.Errorf("Could not read config.json file: %s", err)
-	}
+func ReadConfig() []models.Recipe {
+	file, err := ioutil.ReadFile(path.Join(HomeDir(), ".dotfiles", "config.json"))
+	CheckError("Could not read config.json file", err)
 
 	var config []models.Recipe
 	err = json.Unmarshal(file, &config)
-	if err != nil {
-		return nil, fmt.Errorf("Could not parse config.json file: %s", err)
-	}
+	CheckError("Could not parse config.json file", err)
 
 	// fmt.Printf("%+v", config)
 
-	return config, nil
+	return config
 }
 
 func ExecRecipes(config []models.Recipe) {
@@ -34,14 +32,43 @@ func ExecRecipes(config []models.Recipe) {
 	}
 }
 
-func main() {
-	fmt.Printf("dotback\n-----\n")
+var (
+	app = kingpin.New("dotback", "Handle your dot files like a boss")
+	// initialize = app.Command("init", "Use a Git repository to initialize your dotfiles folder")
+	pull = app.Command("pull", "Fetch latest changes from remote dotfiles repository")
+	push = app.Command("push", "Send latest changes to remote dotfiles repository")
+	// install    = app.Command("install", "Performs the actions defined in your ~/.dotfiles/config.json")
+	// recipe     = install.Arg("recipe", "Execute only this recipe").String()
+	// add        = app.Command("add", "Creates a new recipe")
+	// delete     = app.Command("delete", "Remove a recipe")
+)
 
-	config, err := ReadConfig()
-	if err != nil {
-		fmt.Println("Error loading config.json file\n", err)
-		os.Exit(1)
+func main() {
+
+	switch kingpin.MustParse(app.Parse(os.Args[1:])) {
+	case "pull":
+		path := path.Join(HomeDir(), ".dotfiles")
+		err := Execute(fmt.Sprintf("cd %s && git pull", path))
+		CheckError("Error updating repository", err)
+	case "push":
+		path := path.Join(HomeDir(), ".dotfiles")
+		err := Execute(fmt.Sprintf("cd %s && git push", path))
+		CheckError("Error updating repository", err)
 	}
 
-	ExecRecipes(config)
+	// config := ReadConfig()
+
+	// if *recipe != "" {
+	// 	for _, r := range config {
+	// 		if r.Name == *recipe {
+	// 			fmt.Printf("Executing only recipe '%s' (skipping the rest)\n", r.Name)
+	// 			config = []models.Recipe{r}
+	// 		}
+	// 	}
+	// }
+
+	// fmt.Println(config)
+	// if *action {
+	// 	//ExecRecipes(config)
+	// }
 }
