@@ -9,10 +9,11 @@ import (
 )
 
 type Action struct {
-	Link  string   `json:"link"`
-	Cmd   string   `json:"cmd"`
-	Git   string   `json:"git"`
-	GoGet []string `json:"go-get"`
+	Link       string   `json:"link"`
+	Cmd        string   `json:"cmd"`
+	Git        string   `json:"git"`
+	GoGet      []string `json:"go-get"`
+	AptInstall []string `json:"apt"`
 }
 
 func (action Action) Exec(recipeName string, num int) error {
@@ -36,6 +37,8 @@ func (action Action) Exec(recipeName string, num int) error {
 				err = steps.Git(recipeName, num, value.String())
 			case "GoGet":
 				err = steps.GoGet(recipeName, num, value.Interface().([]string))
+			case "AptInstall":
+				err = steps.AptInstall(recipeName, num, value.Interface().([]string))
 			default:
 				err = fmt.Errorf("Unknown action %+v", step)
 			}
