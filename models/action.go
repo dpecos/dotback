@@ -5,12 +5,14 @@ import (
 	"reflect"
 
 	"github.com/dpecos/dotback/steps"
+	. "github.com/dpecos/dotback/utils"
 )
 
 type Action struct {
-	Link string `json:"link"`
-	Cmd  string `json:"cmd"`
-	Git  string `json:"git"`
+	Link  string   `json:"link"`
+	Cmd   string   `json:"cmd"`
+	Git   string   `json:"git"`
+	GoGet []string `json:"go-get"`
 }
 
 func (action Action) Exec(recipeName string, num int) error {
@@ -32,14 +34,13 @@ func (action Action) Exec(recipeName string, num int) error {
 				err = steps.Cmd(recipeName, num, value.String())
 			case "Git":
 				err = steps.Git(recipeName, num, value.String())
+			case "GoGet":
+				err = steps.GoGet(recipeName, num, value.Interface().([]string))
 			default:
 				err = fmt.Errorf("Unknown action %+v", step)
 			}
 
-			if err != nil {
-
-				return err
-			}
+			CheckError("Error executing action", err)
 		}
 	}
 	return nil
