@@ -22,11 +22,19 @@ func ReadConfig(recipe string) []models.Recipe {
 	CheckError("Could not parse config.json file", err)
 
 	if recipe != "" {
-		for _, r := range config {
+		oldConfig := config
+		config = nil
+
+		for _, r := range oldConfig {
 			if r.Name == recipe {
 				fmt.Printf("Executing only recipe '%s' (skipping the rest)\n", r.Name)
 				config = []models.Recipe{r}
 			}
+		}
+
+		if config == nil {
+			Error("Recipe %s not found", recipe)
+			os.Exit(-1)
 		}
 	}
 
