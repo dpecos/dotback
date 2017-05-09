@@ -3,8 +3,9 @@ package models
 import "fmt"
 
 type Recipe struct {
-	Name    string   `json:"name"`
-	Actions []Action `json:"actions"`
+	Name       string
+	Attributes []string
+	Actions    []Action
 }
 
 func (recipe Recipe) Exec() {

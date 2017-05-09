@@ -1,6 +1,7 @@
 package tests
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/dpecos/dotback/models"
@@ -40,5 +41,21 @@ func TestRetrieveActionsInRecipe(t *testing.T) {
 
 	if !reflect.DeepEqual(actions, expected) {
 		t.Errorf("Action list not matching expected (got %q, expected %q)", actions, expected)
+	}
+}
+func TestParametersInRecipe(t *testing.T) {
+	c := loadConfig(t)
+
+	recipe, err := c.GetRecipe("conky")
+	if err != nil {
+		t.Fatalf("Recipe not found")
+	}
+	fmt.Print(len(recipe.Actions))
+
+	expected := []string{"host=!nayar", "disabled"}
+	attrs := recipe.Attributes
+
+	if !reflect.DeepEqual(attrs, expected) {
+		t.Errorf("Attribution list not matching expected (got %q, expected %q)", attrs, expected)
 	}
 }
