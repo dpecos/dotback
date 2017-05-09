@@ -1,0 +1,57 @@
+[ssh]
+link .
+
+[git]
+link *
+
+[mercurial host=nayar]
+link *
+
+[tmux]
+link *
+
+[bash]
+link *
+#cmd "echo '. ~/.bash_include' >> ~/.bashrc"
+include ~/.bashrc "source ~/.bash_include"
+
+[conky host=!nayar disabled]
+link *
+
+[nodejs]
+link *
+
+[vim]
+git "https://github.com/dpecos/vim_settings.git"
+cmd "cd ~/.vim && git submodule init && git submodule update"
+cmd "(rm ~/.vimrc || true) && ln -s ~/.vim/vimrc ~/.vimrc"
+link *
+
+[go]
+go-get "golang.org/x/tools/cmd/godoc"
+go-get "github.com/nsf/gocode"
+go-get "github.com/rogpeppe/godef"
+go-get "github.com/zmb3/gogetdoc"
+go-get "github.com/golang/lint/golint"
+go-get "github.com/lukehoban/go-outline"
+go-get "sourcegraph.com/sqs/goreturns"
+go-get "golang.org/x/tools/cmd/gorename"
+go-get "github.com/tpng/gopkgs"
+go-get "github.com/newhook/go-symbols"
+go-get "golang.org/x/tools/cmd/guru"
+go-get "github.com/cweill/gotests/..."
+           
+[install-packages-deb os=ubuntu]
+apt "chromium-browser"
+apt "vim"
+apt "tmux" 
+apt "htop"
+apt "wget"
+apt "curl"
+apt "git"
+apt "git-flow"
+apt "gitk"
+apt "subversion"
+apt "vlc"
+apt "conky"
+apt "docker-engine"
