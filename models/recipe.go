@@ -18,3 +18,15 @@ func (recipe Recipe) Exec() {
 	}
 	return
 }
+
+func (recipe *Recipe) addAction(action Action) {
+	recipe.Actions = append(recipe.Actions, action)
+}
+
+func (recipe *Recipe) ActionNames() []string {
+	var actions []string
+	for _, a := range recipe.Actions {
+		actions = append(actions, a.Name)
+	}
+	return actions
+}

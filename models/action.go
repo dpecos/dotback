@@ -5,15 +5,12 @@ import (
 	"reflect"
 
 	"github.com/dpecos/dotback/steps"
-	. "github.com/dpecos/dotback/utils"
+	"github.com/dpecos/dotback/utils"
 )
 
 type Action struct {
-	Link       string   `json:"link"`
-	Cmd        string   `json:"cmd"`
-	Git        string   `json:"git"`
-	GoGet      []string `json:"go-get"`
-	AptInstall []string `json:"apt"`
+	Name      string
+	Arguments []string
 }
 
 func (action Action) Exec(recipeName string, num int) error {
@@ -43,7 +40,7 @@ func (action Action) Exec(recipeName string, num int) error {
 				err = fmt.Errorf("Unknown action %+v", step)
 			}
 
-			CheckError("Error executing action", err)
+			utils.CheckError("Error executing action", err)
 		}
 	}
 	return nil
