@@ -42,6 +42,15 @@ func TestRetrieveActionsInRecipe(t *testing.T) {
 	if !reflect.DeepEqual(actions, expected) {
 		t.Errorf("Action list not matching expected (got %q, expected %q)", actions, expected)
 	}
+
+	expected = []string{"~/.bashrc", "\"source ~/.bash_include\""}
+	includeAction := recipe.Actions[1]
+	arguments := includeAction.Arguments
+
+	if !reflect.DeepEqual(arguments, expected) {
+		t.Errorf("Argument list not matching expected (got %q, expected %q)", actions, expected)
+	}
+
 }
 func TestParametersInRecipe(t *testing.T) {
 	c := loadConfig(t)

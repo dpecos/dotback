@@ -37,7 +37,8 @@ func (c *Config) Load(file string) error {
 	defer f.Close()
 
 	recipeRegex := regexp.MustCompile(`^\[(?P<name>[\w-]+)(\s+(?P<attrs>.*))?\]`)
-	actionRegex := regexp.MustCompile(`^(?P<name>[\w-]+)\b`)
+	actionRegex := regexp.MustCompile(`^(?P<name>[\w-]+)(\s+(?P<args>.*))?`)
+	argsRegex := regexp.MustCompile(`"[^"]*"|[^\s]+`)
 
 	scanner := bufio.NewScanner(f)
 	var recipe *Recipe
@@ -54,7 +55,8 @@ func (c *Config) Load(file string) error {
 			} else {
 				result = matches(actionRegex, line)
 				if result != nil {
-					action := Action{Name: result["name"]}
+					args := argsRegex.FindAllString(result["args"], -1)
+					action := Action{Name: result["name"], Arguments: args}
 					recipe.addAction(action)
 				}
 			}

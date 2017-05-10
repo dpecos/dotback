@@ -1,5 +1,6 @@
 [ssh]
 link .
+cmd "chmod 600 ~/.ssh/*"
 
 [git]
 link *
