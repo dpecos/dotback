@@ -2,46 +2,27 @@ package models
 
 import (
 	"fmt"
-	"reflect"
-
-	"github.com/dpecos/dotback/steps"
-	"github.com/dpecos/dotback/utils"
 )
+
+type Command interface {
+	Execute(recipe Recipe, pos int) error
+	GetName() string
+	GetArguments() []string
+}
 
 type Action struct {
 	Name      string
 	Arguments []string
 }
 
-func (action Action) Exec(recipeName string, num int) error {
+func (action Action) Execute(recipe Recipe, pos int) error {
+	return fmt.Errorf("Not implmented")
+}
 
-	v := reflect.ValueOf(&action).Elem()
-	typeAction := v.Type()
+func (action Action) GetName() string {
+	return action.Name
+}
 
-	for i := 0; i < v.NumField(); i++ {
-		step := typeAction.Field(i).Name
-		value := v.Field(i)
-
-		var err error
-
-		if value.Interface() != nil {
-			switch step {
-			case "Link":
-				err = steps.Link(recipeName, num, value.String())
-			case "Cmd":
-				err = steps.Cmd(recipeName, num, value.String())
-			case "Git":
-				err = steps.Git(recipeName, num, value.String())
-			case "GoGet":
-				err = steps.GoGet(recipeName, num, value.Interface().([]string))
-			case "AptInstall":
-				err = steps.AptInstall(recipeName, num, value.Interface().([]string))
-			default:
-				err = fmt.Errorf("Unknown action %+v", step)
-			}
-
-			utils.CheckError("Error executing action", err)
-		}
-	}
-	return nil
+func (action Action) GetArguments() []string {
+	return action.Arguments
 }

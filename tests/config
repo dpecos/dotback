@@ -13,7 +13,6 @@ link *
 
 [bash]
 link *
-#cmd "echo '. ~/.bash_include' >> ~/.bashrc"
 include ~/.bashrc "source ~/.bash_include"
 
 [conky host=!nayar disabled]

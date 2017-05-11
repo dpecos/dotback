@@ -4,17 +4,16 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/dpecos/dotback/models"
+	"github.com/dpecos/dotback"
 
 	"reflect"
 )
 
-func loadConfig(t *testing.T) models.Config {
-	var c models.Config
-	if err := c.Load("config"); err != nil {
+func loadConfig(t *testing.T) (config dotback.Config) {
+	if err := config.Load("config"); err != nil {
 		t.Errorf("Error loading config: %s", err)
 	}
-	return c
+	return
 }
 
 func TestRetrieveRecipes(t *testing.T) {
@@ -45,7 +44,7 @@ func TestRetrieveActionsInRecipe(t *testing.T) {
 
 	expected = []string{"~/.bashrc", "\"source ~/.bash_include\""}
 	includeAction := recipe.Actions[1]
-	arguments := includeAction.Arguments
+	arguments := includeAction.GetArguments()
 
 	if !reflect.DeepEqual(arguments, expected) {
 		t.Errorf("Argument list not matching expected (got %q, expected %q)", actions, expected)

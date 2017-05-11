@@ -1,4 +1,4 @@
-package models
+package dotback
 
 import (
 	"bufio"
@@ -6,12 +6,16 @@ import (
 	"os"
 	"strings"
 
+	"github.com/dpecos/dotback/actions"
+	"github.com/dpecos/dotback/models"
+	"github.com/dpecos/dotback/utils"
+
 	"fmt"
 	"regexp"
 )
 
 type Config struct {
-	Recipes []Recipe
+	Recipes []models.Recipe
 }
 
 func matches(regex *regexp.Regexp, str string) map[string]string {
@@ -30,10 +34,7 @@ func matches(regex *regexp.Regexp, str string) map[string]string {
 
 func (c *Config) Load(file string) error {
 	f, err := os.Open(file)
-	if err != nil {
-		log.Fatal(err)
-		return err
-	}
+	utils.CheckError("Could not read config file", err)
 	defer f.Close()
 
 	recipeRegex := regexp.MustCompile(`^\[(?P<name>[\w-]+)(\s+(?P<attrs>.*))?\]`)
@@ -41,7 +42,7 @@ func (c *Config) Load(file string) error {
 	argsRegex := regexp.MustCompile(`"[^"]*"|[^\s]+`)
 
 	scanner := bufio.NewScanner(f)
-	var recipe *Recipe
+	var recipe *models.Recipe
 	for scanner.Scan() {
 		line := scanner.Text()
 		if len(strings.TrimSpace(line)) != 0 && line[0] != '#' {
@@ -51,13 +52,14 @@ func (c *Config) Load(file string) error {
 					c.addRecipe(*recipe)
 				}
 				attrs := strings.Split(result["attrs"], " ")
-				recipe = &Recipe{Name: result["name"], Attributes: attrs}
+				recipe = &models.Recipe{Name: result["name"], Attributes: attrs}
 			} else {
 				result = matches(actionRegex, line)
 				if result != nil {
 					args := argsRegex.FindAllString(result["args"], -1)
-					action := Action{Name: result["name"], Arguments: args}
-					recipe.addAction(action)
+					action, err := actions.CreateAction(result["name"], args)
+					utils.CheckError("Unknonw action", err)
+					recipe.AddAction(action)
 				}
 			}
 		}
@@ -75,7 +77,7 @@ func (c *Config) Load(file string) error {
 	return nil
 }
 
-func (c *Config) addRecipe(r Recipe) {
+func (c *Config) addRecipe(r models.Recipe) {
 	c.Recipes = append(c.Recipes, r)
 }
 
@@ -87,7 +89,7 @@ func (c Config) RecipeNames() []string {
 	return names
 }
 
-func (c Config) GetRecipe(name string) (*Recipe, error) {
+func (c Config) GetRecipe(name string) (*models.Recipe, error) {
 	for _, r := range c.Recipes {
 		if r.Name == name {
 			return &r, nil

@@ -1,9 +1,7 @@
-package main
+package dotback
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path"
 
@@ -13,7 +11,7 @@ import (
 	. "github.com/dpecos/dotback/utils"
 )
 
-func ReadConfig(recipe string) []models.Recipe {
+/*func ReadConfig(recipe string) []models.Recipe {
 	file, err := ioutil.ReadFile(path.Join(HomeDir(), ".dotfiles", "config.json"))
 	CheckError("Could not read config.json file", err)
 
@@ -39,11 +37,20 @@ func ReadConfig(recipe string) []models.Recipe {
 	}
 
 	return config
+}*/
+
+func readConfig() Config {
+	file := path.Join(HomeDir(), ".dotfiles", "config")
+
+	var config Config
+	config.Load(file)
+
+	return config
 }
 
-func ExecRecipes(config []models.Recipe) {
+func ExecuteRecipes(config []models.Recipe) {
 	for _, recipe := range config {
-		recipe.Exec()
+		recipe.Execute()
 	}
 }
 
@@ -71,25 +78,17 @@ func main() {
 		err := Execute(fmt.Sprintf("cd %s && git push", path))
 		CheckError("Error updating repository", err)
 	case "list":
-		config := ReadConfig(*recipe)
-		for _, recipe := range config {
+		config := readConfig()
+		for _, recipe := range config.Recipes {
 			fmt.Printf("%s -> \n", recipe.Name)
 
 			for _, action := range recipe.Actions {
-				if action.Link != "" {
-					fmt.Printf("   Link: %s\n", action.Link)
-				}
-				if action.Cmd != "" {
-					fmt.Printf("   Cmd: %s\n", action.Cmd)
-				}
-				if action.Git != "" {
-					fmt.Printf("   Git: %s\n", action.Git)
-				}
+				fmt.Printf("   %s\n", action)
 			}
 		}
 	case "install":
-		config := ReadConfig(*recipe)
-		ExecRecipes(config)
+		//config := ReadConfig(*recipe)
+		//ExecuteRecipes(config)
 	}
 
 }
