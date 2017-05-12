@@ -1,4 +1,4 @@
-package dotback
+package main
 
 import (
 	"bufio"

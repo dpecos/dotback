@@ -11,9 +11,9 @@ type Recipe struct {
 func (recipe Recipe) Execute() {
 	fmt.Printf("\nExecuting recipe '%s'\n", recipe.Name)
 	for i, action := range recipe.Actions {
-		err := action.Execute(recipe, i)
+		err := action.Execute(recipe, i+1)
 		if err != nil {
-			fmt.Printf("   ERROR executing action #%d of recipe '%s': %s\n", i, recipe.Name, err)
+			fmt.Printf("ERROR executing action #%d of recipe '%s': %s\n", i, recipe.Name, err)
 			return
 		}
 	}

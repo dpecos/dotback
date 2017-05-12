@@ -15,6 +15,6 @@ type Cmd struct {
 func (cmd Cmd) Execute(recipe models.Recipe, pos int) error {
 	command := cmd.Arguments[0]
 
-	fmt.Printf(" · [#%d cmd] Executing '%s'\n", pos, command)
+	fmt.Printf(" · [#%d cmd] Executing %s\n", pos, command)
 	return utils.Execute(command)
 }

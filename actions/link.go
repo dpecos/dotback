@@ -46,7 +46,3 @@ func (link Link) Execute(recipe models.Recipe, pos int) error {
 
 	return err
 }
-
-func (link Link) String() string {
-	return fmt.Sprintf("Link: %s", link.Arguments)
-}

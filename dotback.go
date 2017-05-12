@@ -1,4 +1,4 @@
-package dotback
+package main
 
 import (
 	"fmt"
@@ -7,37 +7,8 @@ import (
 
 	"gopkg.in/alecthomas/kingpin.v2"
 
-	"github.com/dpecos/dotback/models"
 	. "github.com/dpecos/dotback/utils"
 )
-
-/*func ReadConfig(recipe string) []models.Recipe {
-	file, err := ioutil.ReadFile(path.Join(HomeDir(), ".dotfiles", "config.json"))
-	CheckError("Could not read config.json file", err)
-
-	var config []models.Recipe
-	err = json.Unmarshal(file, &config)
-	CheckError("Could not parse config.json file", err)
-
-	if recipe != "" {
-		oldConfig := config
-		config = nil
-
-		for _, r := range oldConfig {
-			if r.Name == recipe {
-				fmt.Printf("Executing only recipe '%s' (skipping the rest)\n", r.Name)
-				config = []models.Recipe{r}
-			}
-		}
-
-		if config == nil {
-			Error("Recipe %s not found", recipe)
-			os.Exit(-1)
-		}
-	}
-
-	return config
-}*/
 
 func readConfig() Config {
 	file := path.Join(HomeDir(), ".dotfiles", "config")
@@ -48,8 +19,8 @@ func readConfig() Config {
 	return config
 }
 
-func ExecuteRecipes(config []models.Recipe) {
-	for _, recipe := range config {
+func executeRecipes(config Config) {
+	for _, recipe := range config.Recipes {
 		recipe.Execute()
 	}
 }
@@ -80,15 +51,15 @@ func main() {
 	case "list":
 		config := readConfig()
 		for _, recipe := range config.Recipes {
-			fmt.Printf("%s -> \n", recipe.Name)
+			fmt.Printf("%s %s -> \n", recipe.Name, recipe.Attributes)
 
 			for _, action := range recipe.Actions {
-				fmt.Printf("   %s\n", action)
+				fmt.Printf("   %s: %s\n", action.GetName(), action.GetArguments())
 			}
+			fmt.Println("")
 		}
 	case "install":
-		//config := ReadConfig(*recipe)
-		//ExecuteRecipes(config)
+		config := readConfig()
+		executeRecipes(config)
 	}
-
 }
