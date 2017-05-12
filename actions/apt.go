@@ -11,7 +11,7 @@ type Apt struct {
 	models.Action
 }
 
-// Fetches and install go packages
+// Fetches and install Debian / Ubuntu packages
 func (apt Apt) Execute(recipe models.Recipe, pos int) error {
 	packages := apt.Arguments[0]
 
