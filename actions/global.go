@@ -8,6 +8,11 @@ import (
 
 func CreateAction(name string, arguments []string) (models.Command, error) {
 	var action models.Command
+	for i, arg := range arguments {
+		if arg[0] == '"' {
+			arguments[i] = arg[1 : len(arg)-1]
+		}
+	}
 	switch name {
 	case "link":
 		link := Link{}
