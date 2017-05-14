@@ -30,9 +30,9 @@ func (link Link) Execute(recipe models.Recipe, pos int) error {
 			err = filepath.Walk(from, func(filePath string, file os.FileInfo, err error) error {
 				if !file.IsDir() {
 					to := path.Join(utils.HomeDir(), fmt.Sprintf(".%s", file.Name()))
-					//linkUndo(recipe, num, to)
+					linkUndo(pos, to)
 					fmt.Printf(" · [#%d link] Linking %s -> %s\n", pos, filePath, to)
-					//return os.Symlink(filePath, to)
+					return os.Symlink(filePath, to)
 				}
 				return nil
 			})
