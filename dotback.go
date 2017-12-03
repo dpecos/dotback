@@ -19,9 +19,15 @@ func readConfig() Config {
 	return config
 }
 
-func executeRecipes(config Config) {
+func executeRecipes(config Config, recipeName *string) {
 	for _, recipe := range config.Recipes {
-		recipe.Execute()
+		if recipeName != nil {
+			if *recipeName == recipe.Name {
+				recipe.Execute()
+			}
+		} else {
+			recipe.Execute()
+		}
 	}
 }
 
@@ -60,6 +66,6 @@ func main() {
 		}
 	case "install":
 		config := readConfig()
-		executeRecipes(config)
+		executeRecipes(config, recipe)
 	}
 }
