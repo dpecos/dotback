@@ -1,10 +1,9 @@
 package tests
 
 import (
-	"fmt"
 	"testing"
 
-	"github.com/dpecos/dotback"
+	"github.com/dpecos/dotback/dotback"
 
 	"reflect"
 )
@@ -42,12 +41,12 @@ func TestRetrieveActionsInRecipe(t *testing.T) {
 		t.Errorf("Action list not matching expected (got %q, expected %q)", actions, expected)
 	}
 
-	expected = []string{"~/.bashrc", "\"source ~/.bash_include\""}
+	expected = []string{"~/.bashrc", "source ~/.bash_include"}
 	includeAction := recipe.Actions[1]
 	arguments := includeAction.GetArguments()
 
 	if !reflect.DeepEqual(arguments, expected) {
-		t.Errorf("Argument list not matching expected (got %q, expected %q)", actions, expected)
+		t.Errorf("Argument list not matching expected (got %q, expected %q)", arguments, expected)
 	}
 
 }
@@ -58,7 +57,6 @@ func TestParametersInRecipe(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Recipe not found")
 	}
-	fmt.Print(len(recipe.Actions))
 
 	expected := []string{"host=!nayar", "disabled"}
 	attrs := recipe.Attributes
