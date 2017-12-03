@@ -3,6 +3,7 @@ package utils
 import (
 	"log"
 	"os/user"
+	"strings"
 )
 
 func HomeDir() string {
@@ -11,4 +12,11 @@ func HomeDir() string {
 		log.Fatal(err)
 	}
 	return usr.HomeDir
+}
+
+func ResolveFile(fName string) string {
+	if strings.Contains(fName, "~") {
+		return strings.Replace(fName, "~", HomeDir(), -1)
+	}
+	return fName
 }
