@@ -4,8 +4,6 @@ import (
 	"testing"
 
 	"github.com/dpecos/dotback/dotback"
-
-	"reflect"
 )
 
 func loadConfig(t *testing.T) (config dotback.Config) {
@@ -21,47 +19,33 @@ func TestRetrieveRecipes(t *testing.T) {
 	expected := []string{"ssh", "git", "mercurial", "tmux", "bash", "conky", "nodejs", "vim", "go", "install-packages-deb"}
 	recipes := c.RecipeNames()
 
-	if !reflect.DeepEqual(recipes, expected) {
-		t.Errorf("Recipe list not matching expected (got %q, expected %q)", recipes, expected)
-	}
-
+	equals(t, expected, recipes)
 }
 func TestRetrieveActionsInRecipe(t *testing.T) {
 	c := loadConfig(t)
 
 	recipe, err := c.GetRecipe("bash")
-	if err != nil {
-		t.Fatalf("Recipe not found")
-	}
+	ok(t, err)
 
 	expected := []string{"link", "include"}
 	actions := recipe.ActionNames()
 
-	if !reflect.DeepEqual(actions, expected) {
-		t.Errorf("Action list not matching expected (got %q, expected %q)", actions, expected)
-	}
+	equals(t, expected, actions)
 
 	expected = []string{"~/.bashrc", "source ~/.bash_include"}
 	includeAction := recipe.Actions[1]
 	arguments := includeAction.GetArguments()
 
-	if !reflect.DeepEqual(arguments, expected) {
-		t.Errorf("Argument list not matching expected (got %q, expected %q)", arguments, expected)
-	}
-
+	equals(t, expected, arguments)
 }
 func TestParametersInRecipe(t *testing.T) {
 	c := loadConfig(t)
 
 	recipe, err := c.GetRecipe("conky")
-	if err != nil {
-		t.Fatalf("Recipe not found")
-	}
+	ok(t, err)
 
 	expected := []string{"host=!nayar", "disabled"}
 	attrs := recipe.Attributes
 
-	if !reflect.DeepEqual(attrs, expected) {
-		t.Errorf("Attribution list not matching expected (got %q, expected %q)", attrs, expected)
-	}
+	equals(t, expected, attrs)
 }
